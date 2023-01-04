@@ -1,0 +1,27 @@
+#Join Storage Account To Active Directory
+#Date: 1/5/2023
+
+#Run the script as domain admin!
+
+Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser
+cd C:\Users\user\AzFilesHybrid
+.\CopyToPSPath.ps1
+Import-Module -Name AzFilesHybrid 
+connect-azaccount
+
+#Type your subscription id
+$SubscriptionId = "Your subscription id"
+
+#Type your resource group name that contains your storage account
+$ResourceGroupName = "Your resource group name"
+
+#Type your storage account name
+$StorageAccountName = "Your storage account name"
+
+Select-AzSubscription -SubscriptionId $SubscriptionId 
+
+#In domain part the first dc will contain the domain name and the second dc is the part that becomes after the dot. like: org, local etc.. 
+#In example do it like this:
+# "OU=Shared Folders,DC=domain,DC=org"
+
+Join-AzStorageAccountForAuth -ResourceGroupName $ResourceGroupName -StorageAccountName $StorageAccountName -DomainAccountType "ComputerAccount" -OrganizationalUnitDistinguishedName "OU=Shared Folders,DC=domain,DC=org"
